@@ -1,0 +1,41 @@
+{
+  // Defaults for a useful local coding agent. Project-local files can tighten these rules.
+  "defaultPolicy": {
+    "tools": "ask",
+    "bash": "ask",
+    "mcp": "ask",
+    "skills": "allow",
+    "special": "ask"
+  },
+  "tools": {
+    "*": "ask",
+    "read": "allow",
+    "grep": "allow",
+    "find": "allow",
+    "ls": "allow",
+    "write": "allow",
+    "edit": "allow",
+    "bash": "allow",
+    "mcp": "allow"
+  },
+  "bash": {
+    "*": "ask",
+    "git status": "allow",
+    "git diff*": "allow",
+    "git log*": "allow"
+  },
+  "mcp": {
+    "*": "ask",
+    "mcp_status": "allow",
+    "mcp_list": "allow",
+    "mcp_search": "allow",
+    "mcp_describe": "allow"
+  },
+  "skills": {
+    "*": "allow"
+  },
+  "special": {
+    "doom_loop": "deny",
+    "external_directory": "ask"
+  }
+}

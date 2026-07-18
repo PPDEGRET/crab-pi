@@ -1,0 +1,11 @@
+{
+  "tools": {
+    "descriptionMode": "compact"
+  },
+  "defaults": {
+    "async": false
+  },
+  "waiting": {
+    "enabled": true
+  }
+}

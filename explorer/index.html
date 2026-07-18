@@ -1,0 +1,405 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="A credential-free visual architecture explorer for my Crab operating layer around Pi.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23203a5f'/%3E%3Cpath d='M18 32c0-10 6-16 14-16s14 6 14 16-6 16-14 16-14-6-14-16Z' fill='%23f6f4ef'/%3E%3Ccircle cx='27' cy='29' r='3' fill='%23d85f46'/%3E%3Ccircle cx='37' cy='29' r='3' fill='%23d85f46'/%3E%3C/svg%3E">
+  <title>Crab operating layer — architecture explorer</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #172338;
+      --muted: #536176;
+      --paper: #f6f4ef;
+      --card: #fffdfa;
+      --line: #d7d8d2;
+      --navy: #203a5f;
+      --coral: #9f3f2f;
+      --sage: #4e7967;
+      --gold: #ae7b22;
+      --soft-blue: #e8eef5;
+      --soft-coral: #f8e8e2;
+      --soft-sage: #e6efe9;
+      --shadow: 0 14px 38px rgba(23, 35, 56, 0.08);
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 2%, rgba(216, 95, 70, 0.09), transparent 27rem),
+        radial-gradient(circle at 92% 12%, rgba(78, 121, 103, 0.10), transparent 28rem),
+        var(--paper);
+      line-height: 1.55;
+    }
+
+    a { color: var(--navy); text-underline-offset: 0.18em; }
+    a:focus-visible, summary:focus-visible {
+      outline: 3px solid var(--coral);
+      outline-offset: 4px;
+      border-radius: 4px;
+    }
+
+    .skip {
+      position: absolute;
+      left: 1rem;
+      top: -5rem;
+      z-index: 10;
+      padding: 0.65rem 0.9rem;
+      background: var(--ink);
+      color: white;
+    }
+    .skip:focus { top: 1rem; }
+
+    .shell { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; }
+    header { padding: 1.1rem 0; }
+    nav { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+    .brand { font-weight: 800; letter-spacing: 0.02em; text-decoration: none; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 0.9rem; font-size: 0.92rem; }
+
+    .hero {
+      display: grid;
+      grid-template-columns: minmax(0, 1.3fr) minmax(280px, 0.7fr);
+      gap: 2rem;
+      align-items: end;
+      padding: 4.6rem 0 3.4rem;
+    }
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      margin: 0 0 1rem;
+      color: var(--coral);
+      font-size: 0.78rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 1.7rem; height: 2px; background: currentColor; }
+    h1 {
+      max-width: 12ch;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(3rem, 8vw, 6.8rem);
+      font-weight: 500;
+      letter-spacing: -0.055em;
+      line-height: 0.92;
+    }
+    .hero-copy { max-width: 38rem; margin: 1.5rem 0 0; color: var(--muted); font-size: 1.1rem; }
+    .hero-note {
+      padding: 1.35rem;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--sage);
+      border-radius: 12px;
+      background: rgba(255, 253, 250, 0.76);
+      box-shadow: var(--shadow);
+    }
+    .hero-note strong { display: block; margin-bottom: 0.35rem; }
+    .hero-note p { margin: 0; color: var(--muted); }
+
+    .band { padding: 1.4rem 0 4.7rem; }
+    .section-head { display: grid; grid-template-columns: 0.4fr 1fr; gap: 1.5rem; align-items: end; margin-bottom: 1.4rem; }
+    .section-head h2 { margin: 0; font: 500 clamp(2rem, 4vw, 3.4rem)/1 Georgia, serif; letter-spacing: -0.035em; }
+    .section-head p { max-width: 44rem; margin: 0; color: var(--muted); }
+
+    .route {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(130px, 1fr));
+      gap: 0.8rem;
+      align-items: stretch;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+    }
+    .step, .node {
+      position: relative;
+      min-height: 118px;
+      padding: 1rem;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    .step:not(:last-child)::after {
+      content: "→";
+      position: absolute;
+      z-index: 2;
+      right: -0.72rem;
+      top: 42%;
+      color: var(--coral);
+      font-weight: 900;
+    }
+    .step small, .node small { display: block; margin-bottom: 0.45rem; color: var(--muted); font-weight: 750; text-transform: uppercase; letter-spacing: 0.08em; }
+    .step strong, .node strong { display: block; line-height: 1.2; }
+    .step p, .node p { margin: 0.5rem 0 0; color: var(--muted); font-size: 0.9rem; }
+    .step.primary { border-top: 4px solid var(--navy); }
+    .step.scout { border-top: 4px solid var(--sage); }
+    .step.review { border-top: 4px solid var(--gold); }
+    .step.tool { border-top: 4px solid #68778f; }
+    .step.human { border-top: 4px solid var(--coral); }
+
+    .principles { display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin-top: 1rem; }
+    .principle { padding: 1rem 1.1rem; border-radius: 10px; background: var(--soft-blue); }
+    .principle:nth-child(2) { background: var(--soft-sage); }
+    .principle:nth-child(3) { background: var(--soft-coral); }
+    .principle:nth-child(4) { background: #f3ecd9; }
+    .principle strong { display: block; margin-bottom: 0.25rem; }
+    .principle span { color: var(--muted); font-size: 0.92rem; }
+
+    .diagram-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+    details {
+      overflow: hidden;
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      background: var(--card);
+      box-shadow: var(--shadow);
+    }
+    summary {
+      cursor: pointer;
+      padding: 1.1rem 1.2rem;
+      font-weight: 800;
+      list-style: none;
+    }
+    summary::-webkit-details-marker { display: none; }
+    summary::after { content: "+"; float: right; color: var(--coral); font-size: 1.2rem; }
+    details[open] summary::after { content: "−"; }
+    .flow { display: flex; flex-wrap: wrap; gap: 0.5rem; align-items: center; padding: 0 1.2rem 1.25rem; }
+    .flow .node { flex: 1 1 135px; min-height: auto; box-shadow: none; background: #faf9f6; }
+    .arrow { color: var(--coral); font-weight: 900; }
+    .flow-note { width: 100%; margin: 0.45rem 0 0; color: var(--muted); font-size: 0.9rem; }
+
+    .split { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+    .panel { padding: 1.4rem; border: 1px solid var(--line); border-radius: 14px; background: var(--card); box-shadow: var(--shadow); }
+    .panel h3 { margin: 0 0 0.8rem; font: 500 1.6rem/1.1 Georgia, serif; }
+    .panel ul { margin: 0; padding-left: 1.2rem; }
+    .panel li + li { margin-top: 0.45rem; }
+    .yes { border-top: 5px solid var(--sage); }
+    .no { border-top: 5px solid var(--coral); }
+
+    table { width: 100%; border-collapse: collapse; background: var(--card); box-shadow: var(--shadow); }
+    caption { padding: 0.85rem 1rem; border: 1px solid var(--line); border-bottom: 0; background: var(--card); text-align: left; font-weight: 800; }
+    th, td { padding: 0.85rem 1rem; border: 1px solid var(--line); text-align: left; vertical-align: top; }
+    th { background: var(--soft-blue); font-size: 0.82rem; letter-spacing: 0.06em; text-transform: uppercase; }
+    td:first-child { font-weight: 750; }
+
+    .decision {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 1.5rem;
+      border-radius: 14px;
+      color: white;
+      background: var(--ink);
+    }
+    .decision h2 { margin: 0; font: 500 2rem/1.1 Georgia, serif; }
+    .decision p { margin: 0.4rem 0 0; color: #d6ddeb; }
+    .badge { padding: 0.55rem 0.8rem; border: 1px solid rgba(255,255,255,0.35); border-radius: 999px; white-space: nowrap; font-weight: 800; }
+
+    footer { padding: 2rem 0 3rem; color: var(--muted); font-size: 0.9rem; }
+
+    @media (max-width: 900px) {
+      .hero, .section-head, .split { grid-template-columns: 1fr; }
+      .route { grid-template-columns: repeat(2, 1fr); }
+      .step:not(:last-child)::after { display: none; }
+      .principles { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 620px) {
+      nav { align-items: flex-start; }
+      .nav-links { width: 100%; justify-content: flex-start; gap: 0.55rem; font-size: 0.8rem; }
+      .hero { padding-top: 2.8rem; }
+      .route, .diagram-grid, .principles { grid-template-columns: 1fr; }
+      .decision { grid-template-columns: 1fr; }
+      h1 { font-size: clamp(3rem, 18vw, 5rem); }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+    @media print {
+      body { background: white; }
+      .nav-links, .skip { display: none; }
+      details { break-inside: avoid; }
+      details > * { display: block; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main">Skip to main content</a>
+  <header class="shell">
+    <nav aria-label="Primary">
+      <a class="brand" href="../README.md">CRAB / PI</a>
+      <div class="nav-links">
+        <a href="#route">Route</a>
+        <a href="#diagrams">Six flows</a>
+        <a href="#boundaries">Boundaries</a>
+        <a href="#evidence">Evidence</a>
+      </div>
+    </nav>
+  </header>
+
+  <main id="main">
+    <section class="hero shell" aria-labelledby="title">
+      <div>
+        <p class="eyebrow">Operating layer, not framework</p>
+        <h1 id="title">Bound the agent. Keep the evidence.</h1>
+        <p class="hero-copy">My configuration and policy around upstream Pi: direct-first model routing, one writer, recoverable pruning, Windows-safe prompts, local verification, and a human decision before external effects.</p>
+      </div>
+      <aside class="hero-note" aria-label="Demonstration status">
+        <strong>Synthetic demonstration</strong>
+        <p>No model, network, credential store, remote host, or private session is used by this explorer or its trace.</p>
+      </aside>
+    </section>
+
+    <section class="band shell" id="route" aria-labelledby="route-title">
+      <div class="section-head">
+        <h2 id="route-title">The operating route</h2>
+        <p>A deliberately unsafe request—enable remote writes by default—shows the complete decision path rather than hiding behind a safe happy-path task.</p>
+      </div>
+      <ol class="route" aria-label="Primary to human decision route">
+        <li class="step primary"><small>01 · Primary</small><strong>Classify and bound</strong><p>One independent lane; parent keeps write and claim ownership.</p></li>
+        <li class="step scout"><small>02 · Scout</small><strong>Read-only evidence</strong><p>Two files, one lane, no write, no recursion.</p></li>
+        <li class="step review"><small>03 · Reviewer</small><strong>Challenge the proposal</strong><p>Separate pass identifies the broken fixture assertion.</p></li>
+        <li class="step tool"><small>04 · Tool</small><strong>Verify 13 fixture assertions</strong><p>Local, deterministic, network disabled.</p></li>
+        <li class="step primary"><small>05 · Primary</small><strong>Synthesize</strong><p>Keep remote write off; test read-only first.</p></li>
+        <li class="step human"><small>06 · Human</small><strong>Reject / defer / approve</strong><p>Records intent only; executes nothing external.</p></li>
+      </ol>
+      <div class="principles" aria-label="Operating principles">
+        <div class="principle"><strong>Direct first</strong><span>No agent fleet for ordinary work.</span></div>
+        <div class="principle"><strong>One writer</strong><span>Shared worktree, single change owner.</span></div>
+        <div class="principle"><strong>Recoverable context</strong><span>Summary references preserve originals.</span></div>
+        <div class="principle"><strong>Human edge</strong><span>External effects are decisions, not defaults.</span></div>
+      </div>
+    </section>
+
+    <section class="band shell" id="diagrams" aria-labelledby="diagrams-title">
+      <div class="section-head">
+        <h2 id="diagrams-title">Six flows</h2>
+        <p>Open each panel. These are visual summaries of the full Mermaid diagrams and evidence notes in the architecture document.</p>
+      </div>
+      <div class="diagram-grid">
+        <details open>
+          <summary>1. Model routing</summary>
+          <div class="flow">
+            <div class="node"><small>Default</small><strong>Primary</strong><p>Direct work, sole writer.</p></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Optional</small><strong>Scout / reviewer</strong><p>Bounded evidence returns.</p></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Owner</small><strong>Primary synthesis</strong><p>Final claims stay local.</p></div>
+            <p class="flow-note">A supervised high-compute path is exceptional; pruning is a dedicated role.</p>
+          </div>
+        </details>
+        <details open>
+          <summary>2. Context pruning</summary>
+          <div class="flow">
+            <div class="node"><small>Input</small><strong>One agent message</strong></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Process</small><strong>Dedicated summary</strong></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Output</small><strong>Summary + ref</strong></div>
+            <p class="flow-note">First failure stops the batch; exact original output remains recoverable.</p>
+          </div>
+        </details>
+        <details>
+          <summary>3. Subagent boundaries</summary>
+          <div class="flow">
+            <div class="node"><small>Parent</small><strong>Plan · write · synthesize</strong></div><span class="arrow" aria-hidden="true">↔</span>
+            <div class="node"><small>Scout</small><strong>Read · search · report</strong></div>
+            <div class="node"><small>Reviewer</small><strong>Read · challenge · report</strong></div>
+            <p class="flow-note">Children do not write, recurse, or claim changed-file evidence.</p>
+          </div>
+        </details>
+        <details>
+          <summary>4. Permissions</summary>
+          <div class="flow">
+            <div class="node"><small>Classify</small><strong>Local / unknown / external</strong></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Policy</small><strong>Allow / ask / deny</strong></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Edge</small><strong>Human gate</strong></div>
+            <p class="flow-note">Yolo starts off. Unknown shell/MCP work and outside paths ask; doom loops are denied.</p>
+          </div>
+        </details>
+        <details>
+          <summary>5. Windows prompt transport</summary>
+          <div class="flow">
+            <div class="node"><small>Structure</small><strong>Executable + args[]</strong></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Transport</small><strong>JSON → Base64URL</strong></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Runner</small><strong>Decode · validate · spawn</strong></div>
+            <p class="flow-note">One opaque argv token preserves multiline prompts. Encoding is not encryption.</p>
+          </div>
+        </details>
+        <details>
+          <summary>6. Verification lifecycle</summary>
+          <div class="flow">
+            <div class="node"><small>Pin</small><strong>Known versions</strong></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Patch</small><strong>Exact match or stop</strong></div><span class="arrow" aria-hidden="true">→</span>
+            <div class="node"><small>Prove</small><strong>Tests · RPC · install</strong></div>
+            <p class="flow-note">Patches, isolated state, 67 commands, Windows transport, package contents, and the npm shim are checked.</p>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <section class="band shell" id="boundaries" aria-labelledby="boundaries-title">
+      <div class="section-head">
+        <h2 id="boundaries-title">Contribution boundary</h2>
+        <p>Crab's credibility depends on describing integration as integration—not claiming the engines underneath it.</p>
+      </div>
+      <div class="split">
+        <article class="panel yes">
+          <h3>What I designed</h3>
+          <ul>
+            <li>runner, isolated state, and first-run guidance;</li>
+            <li>role routing and direct-first policy;</li>
+            <li>one-writer and advisory-child boundaries;</li>
+            <li>prompt curation and evidence rules;</li>
+            <li>Windows transport and exact-match patches;</li>
+            <li>pruning failure/recovery behavior;</li>
+            <li>verification and human-decision lifecycle.</li>
+          </ul>
+        </article>
+        <article class="panel no">
+          <h3>Upstream supplies</h3>
+          <ul>
+            <li>Pi's terminal agent, tools, sessions, and extension API;</li>
+            <li>Codex and model inference;</li>
+            <li>subagent, pruning, shell, permission, and MCP base extensions;</li>
+            <li>Context7 documentation retrieval;</li>
+            <li>Playwright browser automation;</li>
+            <li>Ponytail's minimalism skills.</li>
+          </ul>
+        </article>
+      </div>
+    </section>
+
+    <section class="band shell" id="evidence" aria-labelledby="evidence-title">
+      <div class="section-head">
+        <h2 id="evidence-title">Evidence, not theatre</h2>
+        <p>The runner, runtime checks, and synthetic explanation are labelled separately.</p>
+      </div>
+      <div style="overflow-x:auto">
+        <table>
+          <caption>Evidence boundaries</caption>
+          <thead><tr><th scope="col">Claim surface</th><th scope="col">Evidence</th><th scope="col">Boundary</th></tr></thead>
+          <tbody>
+            <tr><td>Runner</td><td>Clean temporary global install + npm shim</td><td>OAuth remains a manual Pi step</td></tr>
+            <tr><td>Runtime resources</td><td>Pi RPC discovers 67 commands</td><td>Discovery does not exercise every command</td></tr>
+            <tr><td>Windows fixes</td><td>Exact patches + prompt/subagent spawn tests</td><td>Pinned dependency versions only</td></tr>
+            <tr><td>Explanation flow</td><td>Five Node tests + deterministic trace</td><td>Synthetic, not a live model session</td></tr>
+            <tr><td>Privacy</td><td>Package allowlist + content-pattern scan</td><td>No claim of exhaustive secret detection</td></tr>
+            <tr><td>Performance</td><td>None</td><td>No productivity or model-superiority claim</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="shell decision" aria-label="Final decision">
+      <div>
+        <h2>Keep remote writes disabled.</h2>
+        <p>Validate an isolated read-only option first. The synthetic human decision rejects the unsafe default and executes no external action.</p>
+      </div>
+      <span class="badge">REJECTED BY HUMAN</span>
+    </section>
+  </main>
+
+  <footer class="shell">
+    <p><strong>Crab for Pi.</strong> Read the <a href="../docs/architecture.md">full architecture</a>, <a href="../docs/attribution.md">attribution matrix</a>, and <a href="../docs/evidence-and-limitations.md">limitations</a>.</p>
+  </footer>
+</body>
+</html>

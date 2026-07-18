@@ -1,0 +1,95 @@
+{
+  "name": "crab-pi",
+  "version": "0.2.0",
+  "description": "An opinionated Pi runner with bounded subagents, context recovery, Windows-safe prompts and verification.",
+  "type": "module",
+  "license": "Apache-2.0",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PPDEGRET/crab-pi.git"
+  },
+  "homepage": "https://github.com/PPDEGRET/crab-pi#readme",
+  "bugs": {
+    "url": "https://github.com/PPDEGRET/crab-pi/issues"
+  },
+  "engines": {
+    "node": ">=22.19.0"
+  },
+  "bin": {
+    "crab": "./bin/crab.mjs"
+  },
+  "files": [
+    "assets/",
+    "bin/",
+    "config/",
+    "demo/",
+    "docs/",
+    "examples/",
+    "profiles/",
+    "prompts/",
+    "runtime/",
+    "scripts/",
+    "tests/",
+    ".gitattributes",
+    ".gitignore",
+    "DESIGN_SCOPE.md",
+    "LICENSE",
+    "npm-shrinkwrap.json",
+    "PROVENANCE.md",
+    "README.md"
+  ],
+  "scripts": {
+    "postinstall": "node scripts/apply-local-patches.mjs",
+    "crab": "node bin/crab.mjs",
+    "demo": "node scripts/run-demo.mjs",
+    "doctor": "node bin/crab.mjs doctor",
+    "test": "node --test tests/*.test.mjs",
+    "verify": "node scripts/verify-runtime.mjs && node scripts/verify-demo.mjs",
+    "verify:runtime": "node scripts/verify-runtime.mjs",
+    "verify:docs": "node scripts/verify-demo.mjs",
+    "verify:install": "node scripts/test-global-install.mjs",
+    "verify:release": "npm run verify && npm run verify:install",
+    "pack:check": "npm pack --dry-run --json"
+  },
+  "pi": {
+    "extensions": [
+      "./node_modules/@narumitw/pi-codex-usage/src/codex-usage.ts",
+      "./node_modules/pi-context-prune/index.ts",
+      "./node_modules/pi-context-usage/src/index.ts",
+      "./node_modules/pi-interactive-shell/index.ts",
+      "./node_modules/pi-mcp-adapter/index.ts",
+      "./node_modules/pi-permission-system/index.ts",
+      "./node_modules/pi-prompt-template-model/index.ts",
+      "./node_modules/pi-subagents/src/extension/index.ts",
+      "./node_modules/pi-web-access/index.ts",
+      "./node_modules/ponytail/pi-extension/index.js"
+    ],
+    "skills": [
+      "./node_modules/pi-interactive-shell/skills",
+      "./node_modules/pi-prompt-template-model/skills",
+      "./node_modules/pi-subagents/skills",
+      "./node_modules/pi-web-access/skills",
+      "./node_modules/ponytail/skills"
+    ],
+    "prompts": [
+      "./prompts",
+      "./node_modules/pi-subagents/prompts"
+    ]
+  },
+  "dependencies": {
+    "@earendil-works/pi-coding-agent": "0.80.6",
+    "@narumitw/pi-codex-usage": "0.13.1",
+    "@openai/codex": "0.144.1",
+    "jiti": "2.6.1",
+    "pi-context-prune": "1.2.0",
+    "pi-context-usage": "1.0.2",
+    "pi-interactive-shell": "0.13.0",
+    "pi-mcp-adapter": "2.11.0",
+    "pi-permission-system": "0.8.0",
+    "pi-prompt-template-model": "0.10.0",
+    "pi-subagents": "0.34.0",
+    "pi-web-access": "0.13.0",
+    "ponytail": "https://codeload.github.com/DietrichGebert/ponytail/tar.gz/dedc97ca7c8a1e7463ac5b36f7fe4b28c3c435a2",
+    "remote-pi": "0.5.4"
+  }
+}

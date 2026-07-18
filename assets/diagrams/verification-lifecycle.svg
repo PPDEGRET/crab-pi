@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1180" height="760" viewBox="0 0 1180 760" role="graphics-document document" aria-labelledby="chart-title-container" aria-describedby="chart-desc-container">
+  <title id="chart-title-container">Crab verification lifecycle</title>
+  <desc id="chart-desc-container">Crab checks pinned patches, launcher tests, isolated Pi startup, command discovery, Windows transport, package contents, documentation, and a clean global installation before release.</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/>
+    </marker>
+    <style>
+      .box { fill: #ffffff; stroke: #334155; stroke-width: 2; rx: 14; }
+      .decision { fill: #fff7ed; stroke: #c2410c; stroke-width: 2; }
+      .stop { fill: #fef2f2; stroke: #b91c1c; stroke-width: 2; rx: 14; }
+      .explain { fill: #f8fafc; stroke: #94a3b8; stroke-width: 2; stroke-dasharray: 8 6; rx: 18; }
+      .line { fill: none; stroke: #6b7280; stroke-width: 2; marker-end: url(#arrow); }
+      .label { font: 600 17px system-ui, sans-serif; fill: #0f172a; text-anchor: middle; }
+      .small { font: 500 14px system-ui, sans-serif; fill: #475569; text-anchor: middle; }
+      .section { font: 700 18px system-ui, sans-serif; fill: #334155; }
+    </style>
+  </defs>
+
+  <rect class="box" x="55" y="45" width="245" height="70"/>
+  <text class="label" x="177" y="76">Pinned dependencies</text>
+  <text class="small" x="177" y="99">exact versions</text>
+
+  <rect class="box" x="370" y="45" width="245" height="70"/>
+  <text class="label" x="492" y="76">Apply patches</text>
+  <text class="small" x="492" y="99">exact-match + idempotent</text>
+
+  <path class="decision" d="M 800 35 L 920 80 L 800 125 L 680 80 Z"/>
+  <text class="label" x="800" y="76">Seam matches?</text>
+  <text class="small" x="800" y="99">or already patched</text>
+
+  <rect class="stop" x="925" y="155" width="205" height="65"/>
+  <text class="label" x="1027" y="182">Stop loudly</text>
+  <text class="small" x="1027" y="205">review upstream drift</text>
+
+  <rect class="box" x="680" y="255" width="240" height="70"/>
+  <text class="label" x="800" y="286">Launcher tests</text>
+  <text class="small" x="800" y="309">state + auth boundaries</text>
+
+  <rect class="box" x="370" y="255" width="245" height="70"/>
+  <text class="label" x="492" y="286">Isolated Pi smoke</text>
+  <text class="small" x="492" y="309">67 commands discovered</text>
+
+  <rect class="box" x="55" y="255" width="245" height="70"/>
+  <text class="label" x="177" y="286">Windows transport</text>
+  <text class="small" x="177" y="309">prompt + subagent spawn</text>
+
+  <rect class="box" x="55" y="420" width="245" height="70"/>
+  <text class="label" x="177" y="451">Package check</text>
+  <text class="small" x="177" y="474">allowlist + no user state</text>
+
+  <rect class="box" x="370" y="420" width="245" height="70"/>
+  <text class="label" x="492" y="451">Global install</text>
+  <text class="small" x="492" y="474">temporary clean prefix</text>
+
+  <rect class="box" x="680" y="420" width="240" height="70"/>
+  <text class="label" x="800" y="451">Release record</text>
+  <text class="small" x="800" y="474">passes + remaining limits</text>
+
+  <path class="line" d="M 300 80 H 370"/>
+  <path class="line" d="M 615 80 H 680"/>
+  <path class="line" d="M 885 112 L 990 155"/>
+  <text class="small" x="950" y="126">no</text>
+  <path class="line" d="M 800 125 V 255"/>
+  <text class="small" x="848" y="190">yes</text>
+  <path class="line" d="M 680 290 H 615"/>
+  <path class="line" d="M 370 290 H 300"/>
+  <path class="line" d="M 177 325 V 420"/>
+  <path class="line" d="M 300 455 H 370"/>
+  <path class="line" d="M 615 455 H 680"/>
+
+  <rect class="explain" x="55" y="575" width="865" height="125"/>
+  <text class="section" x="80" y="608">Separate explanation checks</text>
+  <rect class="box" x="85" y="625" width="220" height="50"/>
+  <text class="label" x="195" y="656">Deterministic trace</text>
+  <rect class="box" x="380" y="625" width="220" height="50"/>
+  <text class="label" x="490" y="656">Focused Node tests</text>
+  <rect class="box" x="675" y="625" width="215" height="50"/>
+  <text class="label" x="782" y="648">Docs, links, privacy</text>
+  <text class="small" x="782" y="668">and diagram checks</text>
+  <path class="line" d="M 305 650 H 380"/>
+  <path class="line" d="M 600 650 H 675"/>
+</svg>

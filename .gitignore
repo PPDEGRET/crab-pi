@@ -1,0 +1,9 @@
+# Private and generated runtime state never belongs in the package.
+.pi/
+.pi-subagents/
+.codex/
+.playwright-mcp/
+node_modules/
+.env
+.env.*
+*.log

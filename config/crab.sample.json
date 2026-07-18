@@ -1,0 +1,98 @@
+{
+  "schemaVersion": 1,
+  "artifactType": "illustrative-non-executable-schema",
+  "label": "Synthetic demonstration",
+  "runtime": {
+    "agentHome": "<agent-home>",
+    "workingDirectory": "<workspace>",
+    "networkAccess": "disabled",
+    "telemetry": false,
+    "credentialSource": "none"
+  },
+  "routing": {
+    "primary": {
+      "modelClass": "frontier-tool-use",
+      "reasoning": "high",
+      "canDelegate": true,
+      "writeMode": "single-writer"
+    },
+    "scout": {
+      "modelClass": "efficient-coding",
+      "reasoning": "medium",
+      "maxConcurrent": 1,
+      "maxFiles": 2,
+      "tools": [
+        "read",
+        "grep",
+        "find",
+        "ls"
+      ],
+      "canWrite": false,
+      "canDelegate": false
+    },
+    "reviewer": {
+      "modelClass": "independent-review",
+      "reasoning": "high",
+      "tools": [
+        "read"
+      ],
+      "canWrite": false,
+      "canDelegate": false,
+      "independence": "separate-read-only-pass"
+    }
+  },
+  "contextPruning": {
+    "enabled": true,
+    "trigger": "agent-message",
+    "batching": "one-summary-per-agent-message",
+    "onFailure": "stop-and-preserve-original",
+    "recoveryTool": "context_tree_query"
+  },
+  "mcp": [
+    {
+      "id": "documentation",
+      "upstreamExample": "Context7",
+      "enabled": false,
+      "loading": "lazy",
+      "allowedOperations": [
+        "resolve-library",
+        "query-documentation"
+      ],
+      "credentials": "not-in-config"
+    },
+    {
+      "id": "browser",
+      "upstreamExample": "Playwright",
+      "enabled": false,
+      "loading": "lazy",
+      "allowedOperations": [
+        "local-smoke-check"
+      ],
+      "credentials": "not-in-config"
+    }
+  ],
+  "extensions": {
+    "remoteExecution": {
+      "status": "option-only",
+      "enabledByDefault": false,
+      "requiresHumanApproval": true
+    }
+  },
+  "verification": {
+    "networkAllowed": false,
+    "commands": [
+      "node --test tests/demo.test.mjs",
+      "node scripts/verify-demo.mjs"
+    ]
+  },
+  "humanDecision": {
+    "default": "deny",
+    "requiredFor": [
+      "external-write",
+      "remote-write",
+      "deploy",
+      "publish",
+      "account-action"
+    ]
+  }
+}
