@@ -2,7 +2,7 @@
 
 ## Why local patches exist
 
-Crab pins its dependency versions but still encounters integration seams that upstream packages do not cover in this exact combination: isolated state, a new reasoning label, Windows multiline prompts, pruning-session transport, failure ordering, and an unrelated maintainer command.
+Crab pins its dependency versions but still encounters integration seams that upstream packages do not cover in this exact combination: isolated state, a new reasoning label, Windows multiline prompts and Node entrypoints, pruning-session transport, failure ordering, and an unrelated maintainer command.
 
 My patcher does not perform fuzzy search or silently continue. Each replacement has:
 
@@ -57,7 +57,7 @@ The shipped Windows test sends one prompt containing:
 - double quotes;
 - single quotes.
 
-A temporary child process records its received arguments. The test asserts that the prompt survives as one exact argument and that trailing flags remain separate. A second Windows test verifies that Pi subagents use the local Node entrypoint instead of a `.cmd` shim that produced `EINVAL` in the observed environment.
+A temporary child process records its received arguments. The test asserts that the prompt survives as one exact argument and that trailing flags remain separate. A second Windows test supplies Crab's real `PI_SUBAGENT_PI_BINARY` environment, verifies that the configured JavaScript entrypoint is passed through Node instead of spawned directly, and launches that entrypoint.
 
 ## Patch inventory in this release
 
@@ -68,6 +68,7 @@ A temporary child process records its received arguments. The test asserts that 
 | `pi-context-prune` batch order | Summarize sequentially and fill remaining results with null after the first failure | Stops extra calls; originals remain available |
 | `pi-interactive-shell` Windows spawn | Add structured Base64URL argv runner | Round-trip test fails on any argument change |
 | `pi-subagents` model metadata | Recognize, map, pass, and label the `max` reasoning level | Static marker and child-spawn checks |
+| `pi-subagents` configured Pi entrypoint | Run configured `.js` entrypoints through the current Node executable instead of spawning them as native binaries | Real launcher-environment spawn test fails on regression |
 | `pi-context-usage` command registry | Omit the package-maintainer release workflow from the operator runtime | Exact-match install failure |
 
 The patch bundle contains multiple exact replacements across these seams plus the generated Windows runner. I ship the patch instructions, not a copied fork of the upstream dependency source.

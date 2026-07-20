@@ -71,7 +71,9 @@ try {
   if (install.status !== 0) throw new Error(`global install failed: ${install.stderr || install.stdout}`);
 
   const shim = process.platform === "win32" ? join(prefix, "crab.cmd") : join(prefix, "bin", "crab");
+  const leanShim = process.platform === "win32" ? join(prefix, "crabtest.cmd") : join(prefix, "bin", "crabtest");
   if (!existsSync(shim)) throw new Error(`npm did not create the crab command at ${shim}`);
+  if (!existsSync(leanShim)) throw new Error(`npm did not create the crabtest command at ${leanShim}`);
 
   const version = runCrab(shim, ["--version"]);
   if (version.status !== 0 || version.stdout.trim() !== "0.80.6") {
@@ -79,6 +81,11 @@ try {
   }
   if (/Synthetic demonstration/i.test(`${version.stdout}${version.stderr}`)) {
     throw new Error("installed crab command is incorrectly wired to the demo.");
+  }
+
+  const leanVersion = runCrab(leanShim, ["--version"]);
+  if (leanVersion.status !== 0 || leanVersion.stdout.trim() !== "0.80.6") {
+    throw new Error(`installed crabtest --version failed: ${leanVersion.stderr || leanVersion.stdout}`);
   }
 
   const setup = runCrab(shim, ["setup", "--version"]);
@@ -95,22 +102,24 @@ try {
   const installedRoot = process.platform === "win32"
     ? join(prefix, "node_modules", "crab-pi")
     : join(prefix, "lib", "node_modules", "crab-pi");
-  const inspect = spawnSync(process.execPath, [join(installedRoot, "scripts", "inspect-runtime.mjs")], {
-    cwd: root,
-    env: { ...process.env, CRAB_STATE_DIR: state },
-    encoding: "utf8",
-    shell: false
-  });
-  if (inspect.status !== 0 || !inspect.stdout.includes("loaded 67 commands")) {
-    throw new Error(`installed runtime resource discovery failed: ${inspect.stderr || inspect.stdout}`);
+  for (const [args, expected] of [[[], "loaded 67 commands"], [["--lean"], "crab-tools"]]) {
+    const inspect = spawnSync(process.execPath, [join(installedRoot, "scripts", "inspect-runtime.mjs"), ...args], {
+      cwd: root,
+      env: { ...process.env, CRAB_STATE_DIR: state },
+      encoding: "utf8",
+      shell: false
+    });
+    if (inspect.status !== 0 || !inspect.stdout.includes(expected)) {
+      throw new Error(`installed runtime resource discovery failed: ${inspect.stderr || inspect.stdout}`);
+    }
   }
 
   if (existsSync(join(state, "pi", "auth.json"))) {
     throw new Error("global install test unexpectedly created authentication state.");
   }
 
-  console.log(`Global install created and invoked ${shim}`);
-  console.log("Installed Crab shows /login guidance, launches Pi, loads 67 commands, passes doctor, and creates no auth state.");
+  console.log(`Global install created and invoked ${shim} and ${leanShim}`);
+  console.log("Installed Crab shows /login guidance, launches Pi, loads normal and lean runtime commands, passes doctor, and creates no auth state.");
 } finally {
   try {
     rmSync(temp, { recursive: true, force: true, maxRetries: 12, retryDelay: 250 });

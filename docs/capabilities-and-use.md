@@ -9,6 +9,7 @@ This page describes the operating pattern encoded in tracked profiles, prompts, 
 | Capability | Mechanism | My operating rule | Origin boundary |
 |---|---|---|---|
 | Direct coding work | Pi primary agent and built-in tools | Solve ordinary work directly; do not spawn a fleet by habit | Pi supplies the loop/tools; I supply the policy |
+| Lean tool startup | `crabtest` plus `load_tools` | Keep optional web, subagent, shell, and MCP schemas out of the first request; load a group only when needed | Pi extension APIs upstream; selection and filtering local |
 | Repository scouting | `pi-subagents` read-only child | One bounded lane, explicit files/tools, no writes or recursion | Extension upstream; routing/bounds local |
 | Independent review | Separate read-only pass | Findings return to the parent; parent evaluates them | Extension/model upstream; review boundary local |
 | Long-session recovery | `pi-context-prune` plus recovery refs | One summary per agent message; stop after first failure | Extension upstream; model role and patches local |

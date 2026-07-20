@@ -1,8 +1,8 @@
 # Verification result
 
-Status: **current `main` passes local, isolated-checkout, and published-tarball verification**
+Status: **the 0.3.0 release candidate passes local, isolated-checkout, package, and clean-install verification**
 
-Date: **2026-07-18**
+Date: **2026-07-20**
 
 Environment: **Windows x64, Node.js 24.15.0**
 
@@ -13,44 +13,44 @@ npm ci
 npm run verify:release
 ```
 
-`verify:release` runs the runtime/package lane, the documentation/demo lane, and a clean temporary global installation. I ran both commands from a detached temporary worktree and removed the registered worktree after they passed.
+`verify:release` runs the runtime/package lane, the documentation/demo lane, and a clean temporary global installation. I ran both commands from an isolated temporary copy after a clean `npm ci`; the temporary copy was removed after it passed.
 
 ## Runtime and package
 
 The verified runner:
 
-- exposes `bin/crab.mjs` as the npm `crab` command;
+- exposes `bin/crab.mjs` and `bin/crabtest.mjs` as the npm `crab` and `crabtest` commands;
 - launches Pi `0.80.6` through the current Node executable;
 - never routes the default command to the synthetic demo;
 - creates isolated settings and policy without creating or copying `auth.json`;
-- preserves existing Pi settings while replacing obsolete Crab package roots with the current install;
+- preserves existing Pi settings while replacing obsolete installed or source-checkout Crab package roots with the current install;
 - applies the pinned integration patches exactly and idempotently;
-- loads 67 Pi commands through RPC discovery;
-- includes `/wayfinder`, `/diagnose`, `/tdd`, `/mcp`, `/context`, `/subagents-doctor`, `/permission-system`, `/codex-status`, and `/ponytail`;
-- passes the Windows multiline-prompt and Node-entrypoint subagent-spawn tests;
-- packs 63 allowlisted files with the shrinkwrap and without `node_modules` or user state.
+- loads 67 normal Pi commands and 68 lean-profile commands through RPC discovery;
+- includes `/wayfinder`, `/diagnose`, `/tdd`, `/mcp`, `/context`, `/subagents-doctor`, `/permission-system`, `/codex-status`, `/ponytail`, and lean-profile `/crab-tools`;
+- passes the Windows multiline-prompt test and a subagent-spawn test using Crab's real configured environment;
+- packs 66 allowlisted files with the shrinkwrap and without `node_modules` or user state.
 
 The focused Node suite reports:
 
 ```text
-tests 13
-pass 13
+tests 15
+pass 15
 fail 0
 ```
 
 ## Clean global install
 
-The verifier packs the current package, installs that tarball under a new temporary npm prefix, prepends only that prefix for command resolution, and checks the generated shim. I also ran it against the published codeload tarball for `main`; it passed.
+The verifier packs the current package, installs that tarball under a new temporary npm prefix, prepends only that prefix for command resolution, and checks both generated shims.
 
 Observed result:
 
 ```text
-Global install created and invoked <temporary-prefix>\crab.cmd
-Installed Crab shows /login guidance, launches Pi, loads 67 commands,
+Global install created and invoked <temporary-prefix>\crab.cmd and <temporary-prefix>\crabtest.cmd
+Installed Crab shows /login guidance, launches Pi, loads normal and lean runtime commands,
 passes doctor, and creates no auth state.
 ```
 
-The codeload URL in the README is deliberate. npm's `github:` dependency path failed in Windows tar extraction during the remote check, while the ordinary GitHub tarball path passed. Temporary state and install prefixes are removed on a best-effort basis; a Windows handle-cleanup warning does not replace the actual install result.
+The codeload URL in the README remains deliberate because the previous release's remote check found npm's `github:` dependency path less reliable on Windows. Temporary state and install prefixes are removed on a best-effort basis; a Windows handle-cleanup warning does not replace the actual install result.
 
 ## Documentation and demo
 
@@ -87,4 +87,4 @@ I opened the explorer from a loopback server at 1440 × 1000 and 375 × 812. At 
 - compatibility with dependency versions other than the pinned set;
 - Node versions older than 22.19; the resolved Undici runtime requires Node 22.19+.
 
-The first public CI run caught that Node 20 was too old, so I raised the package requirement instead of leaving a misleading `>=20` claim. GitHub Actions runs the runtime and documentation gates on Windows and Ubuntu with Node 22 and 24, plus the clean global-install gate on Node 24; the README badge is the source of truth for the published commit. The next external gate is a first install on another clean user account, followed by `/login` and a small real repository task.
+The first public CI run caught that Node 20 was too old, so I raised the package requirement instead of leaving a misleading `>=20` claim. GitHub Actions runs the runtime and documentation gates on Windows and Ubuntu with Node 22 and 24, plus the clean global-install gate on Node 24. The next external gates are CI on the pushed 0.3.0 commit, an exact-commit codeload install, and a small real repository task.

@@ -68,6 +68,27 @@ function shellQuoteIfNeeded(value: string): string {`,
     after: `\t\t\t"xhigh": "Extended reasoning",\n\t\t\t"max": "Maximum supported reasoning",`,
   },
   {
+    name: "pi-subagents runs configured Node entrypoints through Node",
+    file: join(nodeModules, "pi-subagents", "src", "runs", "shared", "pi-spawn.ts"),
+    before: `\tconst env = deps.env ?? process.env;
+\tconst piBinary = env[PI_SUBAGENT_PI_BINARY_ENV]?.trim();
+\tif (piBinary) {
+\t\treturn { command: piBinary, args };
+\t}`,
+    after: `\tconst env = deps.env ?? process.env;
+\tconst piBinary = env[PI_SUBAGENT_PI_BINARY_ENV]?.trim();
+\tif (piBinary) {
+\t\tconst piBinaryPath = normalizePath(piBinary);
+\t\tif (isRunnableNodeScript(piBinaryPath, deps.existsSync ?? fs.existsSync)) {
+\t\t\treturn {
+\t\t\t\tcommand: deps.execPath ?? process.execPath,
+\t\t\t\targs: [piBinaryPath, ...args],
+\t\t\t};
+\t\t}
+\t\treturn { command: piBinary, args };
+\t}`,
+  },
+  {
     name: "context-prune uses the normal Pi SSE session request path",
     file: join(nodeModules, "pi-context-prune", "src", "summarizer.ts"),
     before: `      { apiKey: auth.apiKey, headers: auth.headers, signal: options.signal, ...summarizerThinkingOptions(config) }`,

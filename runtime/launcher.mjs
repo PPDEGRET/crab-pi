@@ -82,7 +82,7 @@ function ensureSettings(settingsPath) {
     const normalized = typeof entry === "string"
       ? entry.replaceAll("\\", "/").replace(/\/+$/, "")
       : "";
-    if (/\/node_modules\/crab-pi$/i.test(normalized)) {
+    if (/(?:^|\/)crab-pi$/i.test(normalized)) {
       changed = true;
       continue;
     }

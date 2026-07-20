@@ -8,6 +8,7 @@ import { fileURLToPath } from "node:url";
 
 const ROOT = resolve(dirname(fileURLToPath(import.meta.url)), "..");
 const manifest = JSON.parse(readFileSync(join(ROOT, "package.json"), "utf8"));
+const shrinkwrap = JSON.parse(readFileSync(join(ROOT, "npm-shrinkwrap.json"), "utf8"));
 const failures = [];
 
 function pass(message) {
@@ -27,16 +28,21 @@ function run(command, args, options = {}) {
 }
 
 if (
+  manifest.version === "0.3.0" &&
+  shrinkwrap.version === manifest.version &&
+  shrinkwrap.packages?.[""]?.version === manifest.version &&
   manifest.bin?.crab === "./bin/crab.mjs" &&
+  manifest.bin?.crabtest === "./bin/crabtest.mjs" &&
   manifest.private !== true &&
   manifest.engines?.node === ">=22.19.0"
 ) {
-  pass("package exposes a publishable crab command with the tested Node floor");
+  pass("package exposes the synchronized 0.3.0 commands with the tested Node floor");
 } else {
-  fail("package.json does not expose the real crab bin and Node 22.19 floor");
+  fail("package metadata is not synchronized for the 0.3.0 commands and Node 22.19 floor");
 }
 
 const expectedDependencies = {
+  "@earendil-works/pi-ai": "0.80.6",
   "@earendil-works/pi-coding-agent": "0.80.6",
   "@narumitw/pi-codex-usage": "0.13.1",
   "@openai/codex": "0.144.1",
@@ -50,7 +56,8 @@ const expectedDependencies = {
   "pi-subagents": "0.34.0",
   "pi-web-access": "0.13.0",
   ponytail: "https://codeload.github.com/DietrichGebert/ponytail/tar.gz/dedc97ca7c8a1e7463ac5b36f7fe4b28c3c435a2",
-  "remote-pi": "0.5.4"
+  "remote-pi": "0.5.4",
+  typebox: "1.1.38"
 };
 const dependencyDrift = Object.entries(expectedDependencies).filter(
   ([name, version]) => manifest.dependencies?.[name] !== version
@@ -60,9 +67,11 @@ else fail(`runtime dependency drift: ${dependencyDrift.map(([name]) => name).joi
 
 const requiredFiles = [
   "bin/crab.mjs",
+  "bin/crabtest.mjs",
   "npm-shrinkwrap.json",
   "profiles/crab.md",
   "runtime/launcher.mjs",
+  "runtime/lean-tools.mjs",
   "runtime/default-permissions.jsonc",
   "scripts/apply-local-patches.mjs",
   "scripts/test-subagent-spawn.mjs",
@@ -108,13 +117,19 @@ try {
   rmSync(stateRoot, { recursive: true, force: true });
 }
 
-const unitResult = run(process.execPath, ["--test", "tests/launcher.test.mjs"]);
-if (unitResult.status === 0) pass("launcher unit tests pass");
+const unitResult = run(process.execPath, [
+  "--test",
+  "tests/launcher.test.mjs",
+  "tests/lean-tools.test.mjs"
+]);
+if (unitResult.status === 0) pass("launcher and lean-tool unit tests pass");
 else fail(`launcher tests failed: ${(unitResult.stderr || unitResult.stdout).trim()}`);
 
-const inspectResult = run(process.execPath, ["scripts/inspect-runtime.mjs"]);
-if (inspectResult.status === 0) pass(inspectResult.stdout.trim());
-else fail(`runtime resource discovery failed: ${(inspectResult.stderr || inspectResult.stdout).trim()}`);
+for (const args of [[], ["--lean"]]) {
+  const inspectResult = run(process.execPath, ["scripts/inspect-runtime.mjs", ...args]);
+  if (inspectResult.status === 0) pass(inspectResult.stdout.trim());
+  else fail(`runtime resource discovery failed: ${(inspectResult.stderr || inspectResult.stdout).trim()}`);
+}
 
 if (process.platform === "win32") {
   for (const script of ["scripts/test-windows-spawn.mjs", "scripts/test-subagent-spawn.mjs"]) {
@@ -138,12 +153,14 @@ if (packResult.status === 0) {
       "package.json",
       "npm-shrinkwrap.json",
       "bin/crab.mjs",
+      "bin/crabtest.mjs",
       "profiles/crab.md",
       "prompts/diagnose.md",
       "prompts/lg.md",
       "prompts/tdd.md",
       "prompts/wayfinder.md",
       "runtime/launcher.mjs",
+      "runtime/lean-tools.mjs",
       "runtime/default-permissions.jsonc",
       "runtime/extension-configs/pi-permission-system.json",
       "runtime/extension-configs/subagent.json",

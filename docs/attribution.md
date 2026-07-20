@@ -8,7 +8,7 @@ Crab is my operating layer around Pi. I assembled the runtime, wrote the launche
 - the operating profile and delegation rules;
 - the selected prompt set and `/wayfinder` experiment;
 - the default permission policy;
-- the Windows structured-prompt patch;
+- the Windows structured-prompt and configured-subagent-entrypoint patches;
 - the context-pruning isolation and failure-order patches;
 - the subagent reasoning-level compatibility patch;
 - the exact-match patch lifecycle;
@@ -19,9 +19,9 @@ Crab is my operating layer around Pi. I assembled the runtime, wrote the launche
 
 | Project | Public credit | What it provides | What I changed or configured |
 |---|---|---|---|
-| [Pi](https://github.com/earendil-works/pi) `@earendil-works/pi-coding-agent@0.80.6` | Package metadata credits **Mario Zechner**; current home **Earendil Works** | The agent loop, TUI, tools, auth, sessions, package system, extensions and SDK/RPC surfaces | I pin it, isolate its state, append the Crab profile and load the package resources. |
+| [Pi](https://github.com/earendil-works/pi) `@earendil-works/pi-coding-agent@0.80.6` and `@earendil-works/pi-ai@0.80.6` | Package metadata credits **Mario Zechner**; current home **Earendil Works** | The agent loop, TUI, tools, auth, sessions, package system, extension APIs, schemas and SDK/RPC surfaces | I pin it, isolate its state, append the Crab profile and load the package resources. |
 | [OpenAI Codex CLI](https://github.com/openai/codex) `0.144.1` | **OpenAI** | A separate coding-agent CLI | I make it available for explicit escalation and keep its state under Crab. |
-| [pi-subagents](https://github.com/nicobailon/pi-subagents) `0.34.0` | Declared author **Nico Bailon** | Built-in scout, reviewer, researcher, planner, worker and orchestration tools | I set the operating rules and patch compatibility for the pinned reasoning level. |
+| [pi-subagents](https://github.com/nicobailon/pi-subagents) `0.34.0` | Declared author **Nico Bailon** | Built-in scout, reviewer, researcher, planner, worker and orchestration tools | I set the operating rules and patch compatibility for the pinned reasoning level and Crab's configured Node entrypoint. |
 | [pi-context-prune](https://github.com/championswimmer/pi-context-prune) `1.2.0` | Repo/npm handle **championswimmer**; no individual author declared | Recoverable tool-output summarisation | I isolate its settings and make summariser batches stop after the first failure. |
 | [pi-context-usage](https://github.com/championswimmer/pi-context-usage) `1.0.2` | Repo/npm handle **championswimmer** | Context visibility | I remove an unrelated package-maintainer release command from the operator surface. |
 | [pi-interactive-shell](https://github.com/nicobailon/pi-interactive-shell) `0.13.0` | Declared author **Nico Bailon** | Supervised external-agent processes and terminal UI | I patch Windows prompt transport to preserve structured argv. |

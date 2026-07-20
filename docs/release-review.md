@@ -1,8 +1,8 @@
 # Release review
 
-Status: **current `main` passes the local, isolated-checkout, and published-tarball gates**
+Status: **the 0.3.0 release candidate passes the local, isolated-checkout, package, and clean-install gates**
 
-Date: **2026-07-18**
+Date: **2026-07-20**
 
 ## Contract
 
@@ -17,17 +17,19 @@ The first command creates the real runner. The second opens Pi in the caller's c
 
 | Check | Result |
 |---|---|
-| `crab` bin | Starts Pi through `process.execPath` and `dist/cli.js` |
+| `crab` and `crabtest` bins | Start Pi through `process.execPath` and `dist/cli.js` |
 | Default command | Never calls `scripts/run-demo.mjs` |
 | First-run state | Settings/policy created; no auth copied or created |
+| Package registration | Obsolete installed and source-checkout Crab roots are removed before the current package is registered |
 | Pi resources | Profile, prompts, skills and extensions discovered through Pi RPC |
 | Patches | Exact-match, idempotent and pinned to dependency versions |
 | Windows transport | Multiline prompts remain one argument |
-| Subagent spawn | Uses the Node entrypoint instead of a `.cmd` shim |
+| Subagent spawn | Crab's configured `.js` entrypoint is passed through Node instead of spawned as a native binary |
+| Lean tool profile | RPC discovery loads `/crab-tools`; unit tests cover progressive disclosure and provider-payload filtering |
 | Permissions | Yolo off; unknown shell/MCP work and external directories ask |
 | Remote control | Not loaded unless I run `crab remote` |
 | Package contents | No auth, sessions, private settings, caches or `node_modules` |
-| Global install | npm creates a working temporary `crab.cmd` from local and published codeload tarballs |
+| Global install | npm creates working temporary `crab.cmd` and `crabtest.cmd` commands from the candidate package |
 | Documentation | First-person setup guide and complete upstream credits |
 
 Run the release gate with:
@@ -53,7 +55,7 @@ The synthetic trace explains the route but is not the runner. It executes only t
 
 ## Decision
 
-The installable runtime passed `npm ci` and `npm run verify:release` from a detached isolated worktree on Windows. The published `main` tarball also passed the generated-command, `/login` guidance, doctor, runtime-discovery, and no-auth checks. Re-run the remote gate with:
+The installable 0.3.0 candidate passed `npm ci`, `npm run verify:release`, and `npm audit --omit=dev --audit-level=high` from an isolated temporary copy on Windows. After pushing, run the exact-commit remote gate with:
 
 ```powershell
 node scripts/test-global-install.mjs https://codeload.github.com/PPDEGRET/crab-pi/tar.gz/<commit>

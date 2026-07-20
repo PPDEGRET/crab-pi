@@ -14,7 +14,7 @@ That should start the real Pi TUI in the current directory, using an isolated Cr
 ## What ships
 
 - the pinned Pi and extension dependencies;
-- a real `crab` npm bin command;
+- a real `crab` npm bin command and experimental `crabtest` lean-tool command;
 - an isolated per-user state directory;
 - the Crab operating profile;
 - the useful prompt templates;
@@ -47,12 +47,12 @@ That should start the real Pi TUI in the current directory, using an isolated Cr
 ## Installation behavior
 
 - Node.js 22.19 or newer is required by the pinned dependency graph.
-- npm creates the cross-platform `crab` command from `bin/crab.mjs`.
-- The launcher calls Pi through Node and an argv array. It never shells through `pi.cmd`.
+- npm creates the cross-platform `crab` and `crabtest` commands from their tracked launchers.
+- The launchers call Pi through Node and argv arrays. They never shell through `pi.cmd`.
 - State defaults to `%LOCALAPPDATA%\Crab` on Windows and `~/.crab` (or `$XDG_STATE_HOME/crab`) elsewhere.
 - `PI_CODING_AGENT_DIR`, sessions, and `CODEX_HOME` stay inside that state root.
 - The launcher creates only public defaults and registers the installed Crab package in Pi settings.
-- Existing settings are preserved, while obsolete absolute Crab package roots are removed after a prefix change. Auth files are never created, read, or copied by the installer.
+- Existing settings are preserved, while obsolete installed or source-checkout Crab package roots are removed. Auth files are never created, read, or copied by the installer.
 - If no provider is configured, Crab explains that Pi will open and that `/login` starts the normal OAuth flow.
 
 ## Commands
@@ -60,6 +60,7 @@ That should start the real Pi TUI in the current directory, using an isolated Cr
 | Command | Result |
 |---|---|
 | `crab` | Start the real Pi TUI |
+| `crabtest` | Start Pi with optional tool groups hidden until requested |
 | `crab <pi args>` | Pass arguments to Pi |
 | `crab setup` | Start Pi with first-run guidance |
 | `crab doctor` | Check the install and state |
@@ -70,10 +71,10 @@ That should start the real Pi TUI in the current directory, using an isolated Cr
 ## Definition of done
 
 - `crab` never points at the demo.
-- `crab --version` returns the pinned Pi version.
+- `crab --version` and `crabtest --version` return the pinned Pi version.
 - A clean state contains settings and public policy, but no auth file.
 - Package resources load through Pi's supported package manifest.
 - Patches are exact-match, idempotent, and tested.
 - The packed npm file list contains no private/runtime state.
-- A clean-prefix global install creates a working `crab` command on Windows.
+- A clean-prefix global install creates working `crab` and `crabtest` commands on Windows.
 - The full verifier passes before release.

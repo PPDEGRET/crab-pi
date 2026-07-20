@@ -30,7 +30,9 @@ test("Crab creates isolated state without creating or copying auth", () => {
     assert.equal(state.authFilePresent, false);
     assert.equal(existsSync(paths.authPath), false);
     assert.equal(existsSync(paths.settingsPath), true);
-    assert.equal(existsSync(join(paths.agentDir, "pi-permissions.jsonc")), true);
+    const permissionPath = join(paths.agentDir, "pi-permissions.jsonc");
+    assert.equal(existsSync(permissionPath), true);
+    assert.match(readFileSync(permissionPath, "utf8"), /"load_tools": "allow"/);
 
     const settings = JSON.parse(readFileSync(paths.settingsPath, "utf8"));
     assert.ok(settings.packages.includes(packageRoot));
@@ -42,13 +44,14 @@ test("Crab preserves user settings and removes obsolete Crab package paths", () 
   withTempState((paths) => {
     ensureState(paths);
     const oldCrabRoot = join(paths.root, "old-prefix", "node_modules", "crab-pi");
+    const sourceCrabRoot = join(paths.root, "source", "crab-pi");
     const unrelatedPackage = join(paths.root, "packages", "other-pi-package");
     writeFileSync(
       paths.settingsPath,
       JSON.stringify({
         defaultProvider: "example",
         defaultModel: "example-model",
-        packages: [oldCrabRoot, unrelatedPackage]
+        packages: [oldCrabRoot, sourceCrabRoot, unrelatedPackage]
       }),
       { encoding: "utf8", flag: "w" }
     );
@@ -59,6 +62,7 @@ test("Crab preserves user settings and removes obsolete Crab package paths", () 
     assert.ok(settings.packages.includes(packageRoot));
     assert.ok(settings.packages.includes(unrelatedPackage));
     assert.ok(!settings.packages.includes(oldCrabRoot));
+    assert.ok(!settings.packages.includes(sourceCrabRoot));
   });
 });
 
@@ -108,7 +112,9 @@ test("Crab respects existing API-key environments without reading values", () =>
 
 test("package metadata exposes a real crab bin and Pi resources", () => {
   const manifest = getPackageManifest();
+  assert.equal(manifest.version, "0.3.0");
   assert.equal(manifest.bin.crab, "./bin/crab.mjs");
+  assert.equal(manifest.bin.crabtest, "./bin/crabtest.mjs");
   assert.notEqual(manifest.private, true);
   assert.equal(manifest.engines.node, ">=22.19.0");
   assert.ok(manifest.pi.extensions.length >= 9);

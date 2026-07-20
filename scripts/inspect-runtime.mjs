@@ -5,16 +5,16 @@ import { spawn } from "node:child_process";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
 
-import { buildLaunchSpec, ensureState, getStatePaths } from "../runtime/launcher.mjs";
+import { buildLaunchSpec, ensureState, getStatePaths, packageRoot } from "../runtime/launcher.mjs";
 
 const root = mkdtempSync(join(tmpdir(), "crab-runtime-inspect-"));
 const paths = getStatePaths({ CRAB_STATE_DIR: root }, process.platform);
+const lean = process.argv.includes("--lean");
 ensureState(paths);
 
-const spec = buildLaunchSpec({
-  paths,
-  userArgs: ["--mode", "rpc", "--no-session"]
-});
+const userArgs = ["--mode", "rpc", "--no-session"];
+if (lean) userArgs.unshift("--extension", join(packageRoot, "runtime", "lean-tools.mjs"));
+const spec = buildLaunchSpec({ paths, userArgs });
 const child = spawn(spec.command, spec.args, {
   cwd: process.cwd(),
   env: spec.env,
@@ -85,10 +85,11 @@ try {
     "codex-status",
     "ponytail"
   ];
+  if (lean) required.push("crab-tools");
   const missing = required.filter((name) => !names.has(name));
   if (missing.length) throw new Error(`Missing runtime commands: ${missing.join(", ")}`);
 
-  console.log(`Crab runtime loaded ${commands.length} commands, including ${required.join(", ")}.`);
+  console.log(`Crab${lean ? " lean" : ""} runtime loaded ${commands.length} commands, including ${required.join(", ")}.`);
   settled = true;
 } finally {
   child.stdin.end();

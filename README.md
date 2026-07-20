@@ -41,12 +41,15 @@ npm install -g https://codeload.github.com/PPDEGRET/crab-pi/tar.gz/main --force
 | Command | What it does |
 |---|---|
 | `crab` | Start Pi |
+| `crabtest` | Start the experimental lean-tool profile |
 | `crab setup` | Start Pi with first-run guidance |
 | `crab doctor` | Check the install and state directory |
 | `crab state` | Print the state directory |
 | `crab remote` | Explicitly load the optional remote-pi extension |
 | `crab demo` | Run the separate synthetic architecture demo |
 | `crab <pi args>` | Pass normal Pi arguments through unchanged |
+
+`crabtest` leaves optional web, subagent, interactive-shell, and MCP tools out of the initial model request. The model can enable a group through the small `load_tools` tool, or you can run `/crab-tools full`. Existing permission files are preserved, so upgrades may ask before `load_tools` runs. The normal `crab` command is unchanged.
 
 ## Build and verify from source
 
@@ -180,13 +183,13 @@ Crab ships a deliberately small set of named workflows:
 
 On Windows with Node 24, the release suite currently proves:
 
-- 13 focused Node tests pass;
+- 15 focused Node tests pass;
 - a clean state creates settings and policy, but no auth file;
-- Pi RPC discovery loads 67 commands, including `/wayfinder`, `/mcp`, `/context`, subagents, permissions, Codex usage, and Ponytail;
-- multiline prompts and subagent launches survive the Windows spawn path;
-- the packed tarball excludes user state and installed dependencies;
-- npm creates a working `crab.cmd` under a clean temporary global prefix;
-- that installed command launches Pi, passes `crab doctor`, and creates no auth state.
+- Pi RPC discovery loads 67 normal commands and 68 lean-profile commands, including `/crab-tools`;
+- multiline prompts and Crab's configured subagent entrypoint survive the Windows spawn path;
+- the packed tarball contains 66 allowlisted files without user state or installed dependencies;
+- npm creates working `crab.cmd` and `crabtest.cmd` commands under a clean temporary global prefix;
+- the installed commands launch Pi, pass `crab doctor`, and create no auth state.
 
 It does **not** prove productivity gains, model superiority, universal safety, production remote control, or successful OAuth with every provider.
 

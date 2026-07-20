@@ -16,7 +16,8 @@
     "write": "allow",
     "edit": "allow",
     "bash": "allow",
-    "mcp": "allow"
+    "mcp": "allow",
+    "load_tools": "allow"
   },
   "bash": {
     "*": "ask",

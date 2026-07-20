@@ -1,6 +1,6 @@
 {
   "name": "crab-pi",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "description": "An opinionated Pi runner with bounded subagents, context recovery, Windows-safe prompts and verification.",
   "type": "module",
   "license": "Apache-2.0",
@@ -16,7 +16,8 @@
     "node": ">=22.19.0"
   },
   "bin": {
-    "crab": "./bin/crab.mjs"
+    "crab": "./bin/crab.mjs",
+    "crabtest": "./bin/crabtest.mjs"
   },
   "files": [
     "assets/",
@@ -77,6 +78,7 @@
     ]
   },
   "dependencies": {
+    "@earendil-works/pi-ai": "0.80.6",
     "@earendil-works/pi-coding-agent": "0.80.6",
     "@narumitw/pi-codex-usage": "0.13.1",
     "@openai/codex": "0.144.1",
@@ -90,6 +92,7 @@
     "pi-subagents": "0.34.0",
     "pi-web-access": "0.13.0",
     "ponytail": "https://codeload.github.com/DietrichGebert/ponytail/tar.gz/dedc97ca7c8a1e7463ac5b36f7fe4b28c3c435a2",
-    "remote-pi": "0.5.4"
+    "remote-pi": "0.5.4",
+    "typebox": "1.1.38"
   }
 }
