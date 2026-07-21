@@ -48,7 +48,7 @@ These entries appeared after the first documentation snapshot and are now part o
 | **Ponytail** direct checkpoint | [`DietrichGebert/ponytail`, commit `dedc97c…`](https://github.com/DietrichGebert/ponytail/commit/dedc97ca7c8a1e7463ac5b36f7fe4b28c3c435a2). Exact package/license credits **DietrichGebert**. | MIT in exact `package.json` and [`LICENSE`](https://raw.githubusercontent.com/DietrichGebert/ponytail/dedc97ca7c8a1e7463ac5b36f7fe4b28c3c435a2/LICENSE) | The identity is resolved; my contribution is only the default-off activation policy. |
 | **remote-pi** `0.5.4` | [`jacobaraujo7/remote_pi`, `pi-extension`, commit `fea91df…`](https://github.com/jacobaraujo7/remote_pi/commit/fea91dfba33ea28387745a43bfa47450afca3760) · [registry](https://registry.npmjs.org/remote-pi/0.5.4). Declared author **Jacob Moura**; repo `jacobaraujo7`; npm handle `jacobmoura7`. | MIT declared in registry/package metadata; no root LICENSE was found at the exact checkpoint | Installed but loaded only by `crab remote`; its operational security is not claimed as verified. |
 
-## Named ecosystem projects that are not direct demonstrated artifacts
+## Named ecosystem projects that are not direct dependencies
 
 | Project | Official source and public credit | License/source boundary | Crab relationship |
 |---|---|---|---|

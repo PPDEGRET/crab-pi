@@ -28,7 +28,7 @@ function run(command, args, options = {}) {
 }
 
 if (
-  manifest.version === "0.3.0" &&
+  manifest.version === "0.3.1" &&
   shrinkwrap.version === manifest.version &&
   shrinkwrap.packages?.[""]?.version === manifest.version &&
   manifest.bin?.crab === "./bin/crab.mjs" &&
@@ -36,9 +36,9 @@ if (
   manifest.private !== true &&
   manifest.engines?.node === ">=22.19.0"
 ) {
-  pass("package exposes the synchronized 0.3.0 commands with the tested Node floor");
+  pass("package exposes the synchronized 0.3.1 commands with the tested Node floor");
 } else {
-  fail("package metadata is not synchronized for the 0.3.0 commands and Node 22.19 floor");
+  fail("package metadata is not synchronized for the 0.3.1 commands and Node 22.19 floor");
 }
 
 const expectedDependencies = {
@@ -98,7 +98,7 @@ try {
     }
   });
   if (versionResult.status === 0 && versionResult.stdout.trim() === "0.80.6") {
-    pass("the crab command launches the pinned Pi CLI, not the demo");
+    pass("the crab command launches the pinned Pi CLI");
   } else {
     fail(`crab --version failed: ${(versionResult.stderr || versionResult.stdout).trim()}`);
   }
@@ -166,7 +166,6 @@ if (packResult.status === 0) {
       "runtime/extension-configs/subagent.json",
       "scripts/apply-local-patches.mjs",
       "scripts/inspect-runtime.mjs",
-      "scripts/run-demo.mjs",
       "scripts/test-subagent-spawn.mjs",
       "scripts/test-windows-spawn.mjs"
     ];

@@ -55,7 +55,6 @@ I used coding agents to help inspect, rewrite, test, and document this release. 
 ## Assets and generated files
 
 - `npm-shrinkwrap.json` was generated fresh from the public pinned manifest; the private lockfile was not copied.
-- The explorer PNG was generated from the local static explorer.
 - The six SVG diagrams were rendered from my Mermaid sources through Kroki and checked for scripts, event handlers, external references, and accessibility metadata.
 - No third-party visual design or dependency source was copied into the package.
 

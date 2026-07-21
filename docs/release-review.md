@@ -1,6 +1,6 @@
 # Release review
 
-Status: **the 0.3.0 release candidate passes the local, isolated-checkout, package, and clean-install gates**
+Status: **the 0.3.1 docs-adjustment release candidate passes the local, isolated-checkout, package, and clean-install gates**
 
 Date: **2026-07-20**
 
@@ -18,13 +18,14 @@ The first command creates the real runner. The second opens Pi in the caller's c
 | Check | Result |
 |---|---|
 | `crab` and `crabtest` bins | Start Pi through `process.execPath` and `dist/cli.js` |
-| Default command | Never calls `scripts/run-demo.mjs` |
+| CLI surface | Presentation-only command and artifacts removed |
 | First-run state | Settings/policy created; no auth copied or created |
 | Package registration | Obsolete installed and source-checkout Crab roots are removed before the current package is registered |
 | Pi resources | Profile, prompts, skills and extensions discovered through Pi RPC |
 | Patches | Exact-match, idempotent and pinned to dependency versions |
 | Windows transport | Multiline prompts remain one argument |
 | Subagent spawn | Crab's configured `.js` entrypoint is passed through Node instead of spawned as a native binary |
+| Authenticated smoke | A temporary install completed parent → async child → wait with only `subagent` and `wait` allowed; auth was not copied |
 | Lean tool profile | RPC discovery loads `/crab-tools`; unit tests cover progressive disclosure and provider-payload filtering |
 | Permissions | Yolo off; unknown shell/MCP work and external directories ask |
 | Remote control | Not loaded unless I run `crab remote` |
@@ -39,10 +40,6 @@ npm ci
 npm run verify:release
 ```
 
-## Evidence that stays separate
-
-The synthetic trace explains the route but is not the runner. It executes only through `crab demo`; normal `crab` always launches Pi.
-
 ## Known limits
 
 - Node 22.19+ is required by the pinned runtime dependency graph.
@@ -55,7 +52,7 @@ The synthetic trace explains the route but is not the runner. It executes only t
 
 ## Decision
 
-The installable 0.3.0 candidate passed `npm ci`, `npm run verify:release`, and `npm audit --omit=dev --audit-level=high` from an isolated temporary copy on Windows. After pushing, run the exact-commit remote gate with:
+The installable 0.3.1 docs-adjustment candidate passed `npm ci` and `npm run verify:release` from an isolated temporary copy on Windows. After pushing, run the exact-commit remote gate with:
 
 ```powershell
 node scripts/test-global-install.mjs https://codeload.github.com/PPDEGRET/crab-pi/tar.gz/<commit>

@@ -113,5 +113,5 @@ See the representative [`/wayfinder` prompt](../examples/wayfinder.md).
 - Treat Base64 as secret protection.
 - Treat tests as customer validation.
 - Treat a public benchmark as proof for a private repository.
-- Turn on remote execution to improve a demo.
+- Turn on remote execution for presentation.
 - Read credentials, sessions, or private settings just to make a public claim look stronger.

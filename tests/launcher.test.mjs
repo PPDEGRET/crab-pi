@@ -77,7 +77,7 @@ test("Crab does not overwrite a user's permission policy", () => {
   });
 });
 
-test("the default crab launch targets Pi, never the synthetic demo", () => {
+test("the default crab launch targets Pi", () => {
   withTempState((paths) => {
     ensureState(paths);
     const spec = buildLaunchSpec({ userArgs: ["--version"], paths });
@@ -86,7 +86,6 @@ test("the default crab launch targets Pi, never the synthetic demo", () => {
     assert.ok(spec.args.includes("--append-system-prompt"));
     assert.ok(spec.args.includes("--session-dir"));
     assert.equal(spec.args.at(-1), "--version");
-    assert.ok(!spec.args.some((value) => value.includes("run-demo")));
     assert.equal(spec.env.PI_CODING_AGENT_DIR, paths.agentDir);
     assert.equal(spec.env.CODEX_HOME, paths.codexHome);
   });
@@ -112,7 +111,7 @@ test("Crab respects existing API-key environments without reading values", () =>
 
 test("package metadata exposes a real crab bin and Pi resources", () => {
   const manifest = getPackageManifest();
-  assert.equal(manifest.version, "0.3.0");
+  assert.equal(manifest.version, "0.3.1");
   assert.equal(manifest.bin.crab, "./bin/crab.mjs");
   assert.equal(manifest.bin.crabtest, "./bin/crabtest.mjs");
   assert.notEqual(manifest.private, true);

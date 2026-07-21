@@ -70,14 +70,14 @@
   <path class="line" d="M 615 455 H 680"/>
 
   <rect class="explain" x="55" y="575" width="865" height="125"/>
-  <text class="section" x="80" y="608">Separate explanation checks</text>
+  <text class="section" x="80" y="608">Documentation checks</text>
   <rect class="box" x="85" y="625" width="220" height="50"/>
-  <text class="label" x="195" y="656">Deterministic trace</text>
+  <text class="label" x="195" y="656">Markdown links</text>
   <rect class="box" x="380" y="625" width="220" height="50"/>
-  <text class="label" x="490" y="656">Focused Node tests</text>
+  <text class="label" x="490" y="656">Attribution + license</text>
   <rect class="box" x="675" y="625" width="215" height="50"/>
-  <text class="label" x="782" y="648">Docs, links, privacy</text>
-  <text class="small" x="782" y="668">and diagram checks</text>
+  <text class="label" x="782" y="648">Privacy + diagrams</text>
+  <text class="small" x="782" y="668">static checks</text>
   <path class="line" d="M 305 650 H 380"/>
   <path class="line" d="M 600 650 H 675"/>
 </svg>

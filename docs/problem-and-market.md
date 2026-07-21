@@ -15,7 +15,7 @@ Pi already gives me a strong agent loop. The missing part was the operating disc
 | Silent monkey-patching | An upstream upgrade changes the seam and the failure appears later. |
 | Aggressive summarisation | Context gets smaller by destroying the evidence I still need. |
 | Shell-built Windows prompts | Quotes and newlines arrive as the wrong arguments. |
-| Demo-first permissions | Safety gets weakened to make the happy path look smoother. |
+| Presentation-first permissions | Safety gets weakened to make the happy path look smoother. |
 
 ## My thesis
 
@@ -49,7 +49,7 @@ Pi and the extensions supply the mechanisms. I supply the way they are put toget
 ## What works now
 
 - `npm install -g https://codeload.github.com/PPDEGRET/crab-pi/tar.gz/main` installs the runner and pinned dependencies.
-- `crab` starts the real Pi CLI, not the demo.
+- `crab` starts the pinned Pi CLI.
 - A fresh state creates no auth file and points me to Pi's normal `/login` flow.
 - Runtime inspection confirms the profile prompts and extension commands load.
 - Windows multiline prompt and subagent-spawn tests pass.

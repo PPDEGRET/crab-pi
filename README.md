@@ -8,8 +8,6 @@ Crab is my operating layer around the [Pi coding-agent harness](https://pi.dev).
 
 This repository contains the runner itself. I left out credentials, sessions, private settings, and generated runtime state.
 
-[![Crab architecture explorer showing the human-gated operating route](assets/architecture-explorer.png)](explorer/index.html)
-
 ## Install
 
 You need Node.js 22.19 or newer.
@@ -29,13 +27,6 @@ On a fresh machine, run this inside Pi:
 
 Choose a provider, finish its normal OAuth flow, and use `/model` if you want a different model. Crab keeps its state under `%LOCALAPPDATA%\Crab` on Windows and `~/.crab` on macOS/Linux. It never copies auth from another Pi installation.
 
-If `crab` prints “Synthetic demonstration,” an old shim is still on your PATH. Check it and reinstall:
-
-```powershell
-Get-Command crab -All
-npm install -g https://codeload.github.com/PPDEGRET/crab-pi/tar.gz/main --force
-```
-
 ## Commands
 
 | Command | What it does |
@@ -46,7 +37,6 @@ npm install -g https://codeload.github.com/PPDEGRET/crab-pi/tar.gz/main --force
 | `crab doctor` | Check the install and state directory |
 | `crab state` | Print the state directory |
 | `crab remote` | Explicitly load the optional remote-pi extension |
-| `crab demo` | Run the separate synthetic architecture demo |
 | `crab <pi args>` | Pass normal Pi arguments through unchanged |
 
 `crabtest` leaves optional web, subagent, interactive-shell, and MCP tools out of the initial model request. The model can enable a group through the small `load_tools` tool, or you can run `/crab-tools full`. Existing permission files are preserved, so upgrades may ask before `load_tools` runs. The normal `crab` command is unchanged.
@@ -104,7 +94,7 @@ primary agent ──→ bounded scout
 
 The primary owns the plan, writes, synthesis, and final claims. Scouts and reviewers are advisory. They do not become hidden co-authors or competing writers.
 
-See the [visual explorer](explorer/index.html) or the six [architecture diagrams](docs/architecture.md).
+See the six [architecture diagrams](docs/architecture.md).
 
 ## The engineering details worth opening
 
@@ -127,25 +117,6 @@ Local integration patches are deliberately brittle: apply the expected replaceme
 ### Permission boundaries
 
 Crab keeps its state outside the workspace. Outside-directory access and unknown shell/MCP operations ask by default; yolo mode starts off. The profile tells the agent not to inspect credentials and keeps publishing, deployment, remote writes, and account actions as human decisions.
-
-The public JSON examples are illustrative and non-executable:
-
-- [`config/crab.sample.json`](config/crab.sample.json)
-- [`config/permissions.sample.json`](config/permissions.sample.json)
-
-## The demo is separate
-
-`crab demo` prints a deterministic architecture trace. It does not call a model, touch auth, or pretend to be the product.
-
-```text
-primary → bounded scout → reviewer → local checks → primary synthesis → human reject
-```
-
-The real command remains `crab`.
-
-- [Read the trace](docs/demonstration-trace.md)
-- [Use the short demo script](docs/demo-script.md)
-- [Open the architecture explorer](explorer/index.html)
 
 ## What I built — and what I did not
 
@@ -183,11 +154,12 @@ Crab ships a deliberately small set of named workflows:
 
 On Windows with Node 24, the release suite currently proves:
 
-- 15 focused Node tests pass;
+- the focused Node tests pass;
 - a clean state creates settings and policy, but no auth file;
-- Pi RPC discovery loads 67 normal commands and 68 lean-profile commands, including `/crab-tools`;
+- Pi RPC discovery loads the normal and lean profiles, including `/crab-tools`;
 - multiline prompts and Crab's configured subagent entrypoint survive the Windows spawn path;
-- the packed tarball contains 66 allowlisted files without user state or installed dependencies;
+- an authenticated parent → async child → wait smoke test completes successfully;
+- the packed tarball contains only allowlisted files without user state or installed dependencies;
 - npm creates working `crab.cmd` and `crabtest.cmd` commands under a clean temporary global prefix;
 - the installed commands launch Pi, pass `crab doctor`, and create no auth state.
 

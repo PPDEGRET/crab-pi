@@ -14,17 +14,6 @@ import {
   piCli
 } from "../runtime/launcher.mjs";
 
-function runNodeScript(relativePath, args = []) {
-  const result = spawnSync(process.execPath, [join(packageRoot, relativePath), ...args], {
-    cwd: process.cwd(),
-    env: process.env,
-    stdio: "inherit",
-    shell: false
-  });
-  if (result.error) throw result.error;
-  return result.status ?? 1;
-}
-
 function applyPatches() {
   const result = spawnSync(process.execPath, [join(packageRoot, "scripts", "apply-local-patches.mjs")], {
     cwd: packageRoot,
@@ -49,7 +38,6 @@ Usage:
   crab doctor          Check the installation and isolated state
   crab state           Print the isolated state directory
   crab remote [args]   Start Pi with the optional remote-pi extension
-  crab demo            Run the synthetic architecture demo
   crab help            Show this help
 
 First run:
@@ -123,8 +111,6 @@ try {
   const [command, ...rest] = process.argv.slice(2);
   if (command === "help") {
     printHelp();
-  } else if (command === "demo") {
-    process.exitCode = runNodeScript("scripts/run-demo.mjs", rest);
   } else if (command === "doctor") {
     applyPatches();
     doctor(ensureState());

@@ -79,8 +79,9 @@ try {
   if (version.status !== 0 || version.stdout.trim() !== "0.80.6") {
     throw new Error(`installed crab --version failed: ${version.stderr || version.stdout}`);
   }
-  if (/Synthetic demonstration/i.test(`${version.stdout}${version.stderr}`)) {
-    throw new Error("installed crab command is incorrectly wired to the demo.");
+  const help = runCrab(shim, ["help"]);
+  if (help.status !== 0 || /crab demo|synthetic architecture/i.test(`${help.stdout}${help.stderr}`)) {
+    throw new Error(`installed crab help is invalid: ${help.stderr || help.stdout}`);
   }
 
   const leanVersion = runCrab(leanShim, ["--version"]);

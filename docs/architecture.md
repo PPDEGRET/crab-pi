@@ -57,7 +57,7 @@ accDescr: Eligible outputs from one completed agent message are summarized by a 
     F --> P["Preserve remaining<br/>unpruned originals"]
 ```
 
-The design favors recoverability over maximum compression. Isolation keeps pruning traffic from inheriting the active coding session's private auth/provider state; normalization handles response/session differences at the integration seam. The synthetic demo does not call a pruner; it only checks the published policy shape.
+The design favors recoverability over maximum compression. Isolation keeps pruning traffic from inheriting the active coding session's private auth/provider state; normalization handles response/session differences at the integration seam.
 
 ## Subagent boundaries
 
@@ -102,7 +102,7 @@ accDescr: Common local tools may proceed, ordinary shell and MCP operations ask,
     H -->|"single-use approval"| G["Execute the bounded action,<br/>then report the result"]
 ```
 
-The shipped policy lives at [`runtime/default-permissions.jsonc`](../runtime/default-permissions.jsonc). It starts with yolo mode off, allows common local coding tools, asks for unknown shell/MCP work and outside-workspace paths, and denies doom loops. The profile separately tells the agent not to inspect or disclose credentials and requires a human decision for external effects. [`permissions.sample.json`](../config/permissions.sample.json) remains an illustrative stricter design, not the runtime policy.
+The shipped policy lives at [`runtime/default-permissions.jsonc`](../runtime/default-permissions.jsonc). It starts with yolo mode off, allows common local coding tools, asks for unknown shell/MCP work and outside-workspace paths, and denies doom loops. The profile separately tells the agent not to inspect or disclose credentials and requires a human decision for external effects.
 
 ## Windows prompt transport
 
@@ -141,9 +141,9 @@ accDescr: Crab checks pinned patches, launcher tests, isolated startup, command 
     K --> G["Clean-prefix global install"]
     G --> H["Record pass, failure,<br/>and remaining limits"]
 
-    subgraph Explain["Separate explanation checks"]
-      D["Deterministic trace"] --> N["Node tests"]
-      N --> V["Artifact, link, diagram,<br/>and privacy-pattern verifier"]
+    subgraph Documentation["Documentation checks"]
+      D["Markdown links"] --> N["Attribution and license"]
+      N --> V["Diagram and<br/>privacy-pattern verifier"]
     end
 ```
 
@@ -157,7 +157,7 @@ accDescr: Crab checks pinned patches, launcher tests, isolated startup, command 
 | Agent roles | Primary writer; read-only scout/reviewer | Nested or competing writers |
 | Context | Summaries plus recoverable refs | Silent deletion after failed pruning |
 | Process transport | Structured argv array | Shell-interpolated multiline prompt |
-| Network | Disabled in the demo; lazy documentation/browser tools in real use | Remote write, deployment, publishing, account actions |
+| Network | Lazy documentation/browser tools when explicitly loaded | Remote write, deployment, publishing, account actions |
 | Evidence | Commands actually run and files actually inspected | Usage, productivity, adoption, or model-superiority inference |
 
 ## Evidence status
@@ -170,4 +170,3 @@ accDescr: Crab checks pinned patches, launcher tests, isolated startup, command 
 | Permission defaults | Shipped with yolo mode off; user changes are preserved |
 | MCP configuration | Adapter ships; endpoints remain user-configured through `/mcp setup` |
 | Package installation | Packed tarball installed under a clean temporary global prefix |
-| End-to-end role trace | Deterministic synthetic explanation, not a live agent transcript |

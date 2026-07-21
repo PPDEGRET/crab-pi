@@ -23,7 +23,7 @@ That should start the real Pi TUI in the current directory, using an isolated Cr
 - the exact local integration patches;
 - Windows prompt/subagent spawn tests;
 - a doctor command and package-level verifier;
-- documentation, architecture, credits, and a separate synthetic demo.
+- documentation, architecture, and credits.
 
 ## What does not ship
 
@@ -66,11 +66,9 @@ That should start the real Pi TUI in the current directory, using an isolated Cr
 | `crab doctor` | Check the install and state |
 | `crab state` | Print the state directory |
 | `crab remote` | Explicitly load `remote-pi` |
-| `crab demo` | Run the separate synthetic architecture demo |
 
 ## Definition of done
 
-- `crab` never points at the demo.
 - `crab --version` and `crabtest --version` return the pinned Pi version.
 - A clean state contains settings and public policy, but no auth file.
 - Package resources load through Pi's supported package manifest.

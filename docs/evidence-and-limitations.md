@@ -1,6 +1,6 @@
 # Evidence and limitations
 
-I keep the runtime evidence separate from the explanatory demo.
+This page separates verified runtime behavior from claims that still need real-world evidence.
 
 ## Runtime evidence
 
@@ -8,7 +8,6 @@ The real runner currently proves these things:
 
 - `package.json` exposes `bin/crab.mjs` as the `crab` command;
 - the launcher calls the pinned Pi CLI through Node and an argv array;
-- the default path never calls `scripts/run-demo.mjs`;
 - state is isolated per user;
 - clean startup creates settings and policy but no auth file;
 - existing user settings survive registration of the Crab package;
@@ -22,20 +21,6 @@ Run it with:
 
 ```powershell
 npm run verify:runtime
-```
-
-## Demo evidence
-
-`crab demo` is a deterministic explanation of the operating route:
-
-```text
-primary → scout → reviewer → local checks → parent synthesis → human decision
-```
-
-It is useful for checking the published policy shape. It is not a model run and it is not evidence that every live Crab session behaves that way.
-
-```powershell
-npm run demo
 npm run verify:docs
 ```
 
@@ -48,8 +33,8 @@ npm run verify:docs
 | Runtime resources load | Verified through Pi RPC command discovery |
 | Focused Node tests | Passing |
 | Windows transport/subagent spawn | Passing on Windows |
+| Authenticated parent → async child → wait smoke | Passing through a temporary install; auth stayed in its existing state directory |
 | Packed file allowlist | Passing |
-| Synthetic architecture demo | Passing and clearly labelled |
 | Clean-prefix global install | Passing locally on Windows |
 | Real OAuth completion | Manual user step inside Pi; never automated in tests |
 | Repeated real repository use | Ongoing, not measured here |
